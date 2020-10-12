@@ -44,7 +44,6 @@ def build_notebooks():
     """
     # Create exporter
     html = nbconvert.HTMLExporter()
-    html.template_name = 'classic'
 
     # Loop through each file
     for filename in glob.glob(f'{config.notebook_dir}/*.ipynb'):
