@@ -17,6 +17,7 @@ logging.basicConfig(
     stream=sys.stdout,
     level=logging.INFO)
 
+
 def build_notebooks(site):
     """
     Build jupyter notebooks
@@ -68,16 +69,19 @@ def build_index_page(site):
         file.write(output)
 
 
-def build_utility(site):
+def build_utility(filename):
     """
-    Build utility files
+    Return builder that just writes an empty file
+    with the given filename
     """
-    log = logging.getLogger('build_utility')
-    log.info("Building '.nojekyll'")
+    def build_utility_file(site):
+        log = logging.getLogger(f"build_utility('{filename}')")
+        log.info(f"Building '{filename}'")
 
-    # Write nojekyll file
-    with open(f'{site.output_dir}/.nojekyll', 'w+') as f:
-        f.write('')
+        # Write nojekyll file
+        with open(f'{site.output_dir}/{filename}', 'w+') as f:
+            f.write('')
+    return build_utility_file
 
 
 class Site:
@@ -92,7 +96,7 @@ class Site:
         'builders': [
             build_notebooks,
             build_index_page,
-            build_utility
+            build_utility('.nojekyll')
         ]
     }
 
