@@ -20,17 +20,18 @@ class Config:
     notebook_dir = 'notebook'
     output_dir = 'docs'
 
+    @property
+    def jinja_env(self):
+        """
+        Return jinja2 environment for this config
+        """
+        return jinja2.Environment(
+            loader=jinja2.FileSystemLoader(self.templates_dir),
+            autoescape=jinja2.select_autoescape(['html'])
+        )
 
-# Instantiate config
-config = Config()
 
-# Jinja environment
-jenv = jinja2.Environment(
-    loader=jinja2.FileSystemLoader(config.templates_dir),
-    autoescape=jinja2.select_autoescape(['html']))
-
-
-def make_directory():
+def make_directory(config):
     """
     Ensure that directory exists
     """
@@ -38,7 +39,7 @@ def make_directory():
         os.mkdir(f'{config.output_dir}')
 
 
-def build_notebooks():
+def build_notebooks(config):
     """
     Build jupyter notebooks
     """
@@ -64,12 +65,12 @@ def build_notebooks():
             out.write(encoded)
 
 
-def build_index_page():
+def build_index_page(config):
     """
     Build index page
     """
     # Get template
-    template = jenv.get_template('index.html')
+    template = config.jinja_env.get_template('index.html')
 
     # Notebooks array
     notebooks = glob.glob(f'{config.notebook_dir}/*.ipynb')
@@ -82,7 +83,7 @@ def build_index_page():
         file.write(output)
 
 
-def build_utility():
+def build_utility(config):
     """
     Build utility files
     """
@@ -92,7 +93,8 @@ def build_utility():
 
 
 if __name__ == "__main__":
-    make_directory()
-    build_notebooks()
-    build_index_page()
-    build_utility()
+    config = Config()
+    make_directory(config)
+    build_notebooks(config)
+    build_index_page(config)
+    build_utility(config)
