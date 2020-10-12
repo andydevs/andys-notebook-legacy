@@ -9,6 +9,7 @@ import glob
 import nbconvert
 import codecs
 import logging
+import markdown
 
 
 def build_notebooks(site):
@@ -56,8 +57,13 @@ def build_index_page(site):
     notebooks = [ os.path.basename(file) for file in notebooks ]
     notebooks = [ os.path.splitext(name)[0] for name in notebooks ]
 
+    # Read README markdown file
+    with open('README.md', 'r') as f:
+        text = f.read()
+    readme = markdown.markdown(text)
+
     # Render and write to file
-    output = template.render(notebooks=notebooks)
+    output = template.render(readme=readme, notebooks=notebooks)
     with open(f'{site.output_dir}/index.html', 'w+') as file:
         file.write(output)
 

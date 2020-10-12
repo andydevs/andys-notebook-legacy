@@ -6,8 +6,16 @@
     <title>Andy's Notebook</title>
 </head>
 <body>
+
+<div class="readme">
+    {{ readme | safe }}
+</div>
+
+<ul class='notebook-links'>
 {% for name in notebooks %}
-    <p class="notebook-link"><a href="/andys-notebook/{{ name }}.html">{{ name }}</a></p>
+    <li class="notebook-link"><a href="/andys-notebook/{{ name }}.html">{{ name }}</a></li>
 {% endfor %}
+</ul class='notebook-links'>
+
 </body>
 </html>
