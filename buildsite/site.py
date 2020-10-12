@@ -1,0 +1,73 @@
+"""
+Hosting Jupyter Notebooks on GitHub Pages
+
+Author:  Anshul Kharbanda
+Created: 10 - 12 - 2020
+"""
+import os
+import jinja2
+import logging
+from .builders import (
+    build_notebooks,
+    build_index_page,
+    build_utility
+)
+
+
+class Site:
+    """
+    Site object, handles all of the building
+    """
+    # Default configuration for site
+    _defaults = {
+        'templates_dir': 'templates',
+        'notebook_dir': 'notebook',
+        'output_dir': 'docs',
+        'builders': [
+            build_notebooks,
+            build_index_page,
+            build_utility('.nojekyll')
+        ]
+    }
+
+    def __init__(self, **kwargs):
+        """
+        Initalize site object with given configuration,
+        passed through **kwargs
+
+        :see Site._defaults:
+        """
+        for key, value in self._defaults.items():
+            setattr(self, key, kwargs.get(key, value))
+
+    @property
+    def jinja_env(self):
+        """
+        Return jinja2 environment for this config
+        """
+        return jinja2.Environment(
+            loader=jinja2.FileSystemLoader(self.templates_dir),
+            autoescape=jinja2.select_autoescape(['html'])
+        )
+
+    def build(self):
+        """
+        Build site
+        """
+        log = logging.getLogger('site')
+        log.info('Building site.')
+        self._make_directory()
+        for run_builder in self.builders:
+            log.info(f'Running {run_builder.__name__}')
+            run_builder(self)
+
+    def _make_directory(self):
+        """
+        Ensure that output directory exists
+        """
+        log = logging.getLogger('site')
+        if os.path.exists(f'./{self.output_dir}'):
+            log.info(f"'{self.output_dir}' directory exists!")
+        else:
+            log.info(f"Creating '{self.output_dir}' directory")
+            os.mkdir(f"{self.output_dir}")
