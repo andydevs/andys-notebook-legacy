@@ -4,22 +4,32 @@ Hosting Jupyter Notebooks on GitHub Pages
 Author:  Anshul Kharbanda
 Created: 10 - 12 - 2020
 """
+import sys
 import os
 import glob
 import nbconvert
 import codecs
 import jinja2
+import logging
 
+# Configure logging
+logging.basicConfig(
+    stream=sys.stdout,
+    level=logging.INFO)
 
 def build_notebooks(site):
     """
     Build jupyter notebooks
     """
+    log = logging.getLogger('build_notebooks')
+
     # Create exporter
     html = nbconvert.HTMLExporter()
 
     # Loop through each file
     for filename in glob.glob(f'{site.notebook_dir}/*.ipynb'):
+        log.info(f"Building '{filename}'")
+
         # Get output filename
         name = os.path.basename(filename)
         name = os.path.splitext(name)[0]
@@ -41,6 +51,9 @@ def build_index_page(site):
     """
     Build index page
     """
+    log = logging.getLogger('build_index_page')
+    log.info("Building 'index.html'")
+
     # Get template
     template = site.jinja_env.get_template('index.html')
 
@@ -59,6 +72,9 @@ def build_utility(site):
     """
     Build utility files
     """
+    log = logging.getLogger('build_utility')
+    log.info("Building '.nojekyll'")
+
     # Write nojekyll file
     with open(f'{site.output_dir}/.nojekyll', 'w+') as f:
         f.write('')
@@ -104,17 +120,23 @@ class Site:
         """
         Build site
         """
+        log = logging.getLogger('site')
+        log.info('Building site.')
         self._make_directory()
         for run_builder in self.builders:
+            log.info(f'Running {run_builder.__name__}')
             run_builder(self)
 
     def _make_directory(self):
         """
         Ensure that output directory exists
         """
-        if not os.path.exists(f'./{self.output_dir}'):
+        log = logging.getLogger('site')
+        if os.path.exists(f'./{self.output_dir}'):
+            log.info(f'{self.output_dir} exists!')
+        else:
+            log.info(f'Creating {self.output_dir} directory')
             os.mkdir(f'{self.output_dir}')
-
 
 
 if __name__ == "__main__":
