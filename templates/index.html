@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Andy's Notebook</title>
+</head>
+<body>
+{% for name in notebooks %}
+    <p class="notebook-link"><a href="/andys-notebook/{{ name }}.html">{{ name }}</a></p>
+{% endfor %}
+</body>
+</html>

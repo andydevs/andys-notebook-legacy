@@ -1,5 +1,5 @@
 """
-Build notebook site
+Hosting Jupyter Notebooks on GitHub Pages
 
 Author:  Anshul Kharbanda
 Created: 10 - 12 - 2020
@@ -8,19 +8,34 @@ import os
 import glob
 import nbconvert
 import codecs
+import jinja2
 
 
-# Configuration
-notebook_dir = 'notebook'
-output_dir = 'docs'
+class Config:
+    """
+    Configuration of site builder
+    So I can keep it all in a namespace
+    """
+    templates_dir = 'templates'
+    notebook_dir = 'notebook'
+    output_dir = 'docs'
+
+
+# Instantiate config
+config = Config()
+
+# Jinja environment
+jenv = jinja2.Environment(
+    loader=jinja2.FileSystemLoader(config.templates_dir),
+    autoescape=jinja2.select_autoescape(['html']))
 
 
 def make_directory():
     """
     Ensure that directory exists
     """
-    if not os.path.exists(f'./{output_dir}'):
-        os.mkdir(f'{output_dir}')
+    if not os.path.exists(f'./{config.output_dir}'):
+        os.mkdir(f'{config.output_dir}')
 
 
 def build_notebooks():
@@ -32,11 +47,11 @@ def build_notebooks():
     html.template_name = 'classic'
 
     # Loop through each file
-    for filename in glob.glob(f'{notebook_dir}/*.ipynb'):
+    for filename in glob.glob(f'{config.notebook_dir}/*.ipynb'):
         # Get output filename
         name = os.path.basename(filename)
         name = os.path.splitext(name)[0]
-        outn = f'{output_dir}/{name}.html'
+        outn = f'{config.output_dir}/{name}.html'
 
         # Read file and convert
         body, _ = html.from_filename(filename)
@@ -50,6 +65,35 @@ def build_notebooks():
             out.write(encoded)
 
 
+def build_index_page():
+    """
+    Build index page
+    """
+    # Get template
+    template = jenv.get_template('index.html')
+
+    # Notebooks array
+    notebooks = glob.glob(f'{config.notebook_dir}/*.ipynb')
+    notebooks = [ os.path.basename(file) for file in notebooks ]
+    notebooks = [ os.path.splitext(name)[0] for name in notebooks ]
+
+    # Render and write to file
+    output = template.render(notebooks=notebooks)
+    with open(f'{config.output_dir}/index.html', 'w+') as file:
+        file.write(output)
+
+
+def build_utility():
+    """
+    Build utility files
+    """
+    # Write nojekyll file
+    with open(f'{config.output_dir}/.nojekyll', 'w+') as f:
+        f.write('')
+
+
 if __name__ == "__main__":
     make_directory()
     build_notebooks()
+    build_index_page()
+    build_utility()
