@@ -34,12 +34,8 @@ def build_notebooks(site):
         body, _ = html.from_filename(filename)
 
         # Write to file
-        # Apparently we have to encode the body
-        # manually because the exporter doesn't
-        # return a properly encoded body string
-        encoded = codecs.encode(body, 'utf-16')
-        with open(outn, 'wb+') as out:
-            out.write(encoded)
+        with open(outn, 'w+', encoding='utf-8') as out:
+            out.write(body)
 
 
 def build_index_page(site):
