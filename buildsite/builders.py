@@ -20,6 +20,7 @@ def build_notebooks(site):
 
     # Create exporter
     html = nbconvert.HTMLExporter()
+    html.template_name = 'lab'
 
     # Loop through each file
     for filename in glob.glob(f'{site.notebook_dir}/*.ipynb'):
