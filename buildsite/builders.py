@@ -10,6 +10,7 @@ import nbconvert
 import codecs
 import logging
 import markdown
+import jinja2
 
 
 def build_notebooks(site):
@@ -19,8 +20,10 @@ def build_notebooks(site):
     log = logging.getLogger('build_notebooks')
 
     # Create exporter
-    html = nbconvert.HTMLExporter()
-    html.template_name = 'full'
+    html = nbconvert.HTMLExporter(
+        extra_loaders=[jinja2.FileSystemLoader(site.templates_dir)],
+        template_file='notebook.html'
+    )
 
     # Loop through each file
     for filename in glob.glob(f'{site.notebook_dir}/*.ipynb'):

@@ -14254,8 +14254,61 @@ a.anchor-link {
     }
     init_mathjax();
     </script>
-    <!-- End of mathjax configuration --></head>
-<body class="jp-Notebook" data-jp-theme-light="true" data-jp-theme-name="JupyterLab Light">
+    <!-- End of mathjax configuration -->
+<style>
+    body {
+        margin: 0;
+    }
+    .an-nav {
+        margin: 0;
+        padding: var(--jp-notebook-padding);
+        display: flex; /* Stright flexin' on 'em' */
+        background-color: #59e;
+        color: white;
+    }
+    .an-nav-links {
+        margin: 0pt;
+        padding: 0pt;
+        display: block;
+    }
+    .an-nav-link {
+        margin: 10px;
+        display: inline-block;
+    }
+    .an-nav-link:before {
+        content: '>'
+    }
+    .CodeMirror {
+        overflow-x: auto;
+    }
+
+    @media screen and (max-width: 500px) {
+        /* We don't got the space to flex on mobile */
+        .jp-Cell-inputWrapper,
+        .jp-Cell-outputWrapper,
+        .jp-InputArea,
+        .jp-OutputArea,
+        .jp-OutputArea-child {
+            display: block;
+        }
+        .jp-InputPrompt {
+            text-align: left;
+        }
+    }
+</style>
+</head>
+<body>
+<nav class="an-nav">
+    <ul class="an-nav-links">
+        <li class='an-nav-link'>
+            <a href="http://andydevs.github.io/andys-notebook/">Andy's Notebook</a>
+        </li>
+        <li class='an-nav-link'>
+            <a href="http://andydevs.github.io">Main Site</a>
+        </li>
+    </ul>
+</nav>
+<div class="jp-Notebook">
 
 <div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
@@ -14505,7 +14558,10 @@ $$
 </div>
 
 </div>
+</div>
+
 </body>
+
 
 
 
