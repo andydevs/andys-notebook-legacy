@@ -25,6 +25,7 @@ def build_notebooks(site):
         extra_loaders=[jinja2.FileSystemLoader(site.templates_dir)],
         template_file='notebook.html'
     )
+    log.debug(f'HTMLExporter: {repr(html)}')
 
     # Loop through each file
     for filename in glob.glob(f'{site.notebook_dir}/*.ipynb'):
@@ -34,11 +35,15 @@ def build_notebooks(site):
         name = os.path.basename(filename)
         name = os.path.splitext(name)[0]
         outn = f'{site.output_dir}/{name}.html'
+        log.debug(f"Root name '{name}'")
+        log.debug(f"Output file '{outn}'")
 
         # Read file and convert
         body, _ = html.from_filename(filename)
+        log.debug(f'Body size: {len(body)} bytes')
 
         # Write to file
+        log.debug(f'Writing to {outn}')
         with open(outn, 'w+', encoding='utf-8') as out:
             out.write(body)
 
@@ -57,6 +62,7 @@ def build_index_page(site):
     notebooks = []
     for filename in glob.glob(f'{site.notebook_dir}/*.ipynb'):
         # Read notebook
+        log.debug(f"Filename: '{filename}'")
         with open(filename, 'r') as file:
             notebook = nbformat.read(file, as_version=4)
 
@@ -67,14 +73,20 @@ def build_index_page(site):
         
         # Get title
         title = notebook.metadata.title or rootname
+
+        # Append notebook data
+        notebook_data = (indexurl, title)
+        log.debug(f'Notebook data: {notebook_data}')
         notebooks.append((indexurl, title))
 
     # Read README markdown file
     with open('README.md', 'r') as f:
         text = f.read()
     readme = markdown.markdown(text)
+    log.debug(f'Readme: \n' + readme)
 
     # Render and write to file
+    log.debug('Writing to output file')
     output = template.render(readme=readme, notebooks=notebooks)
     with open(f'{site.output_dir}/index.html', 'w+') as file:
         file.write(output)
@@ -90,6 +102,7 @@ def build_utility(filename):
         log.info(f"Building '{filename}'")
 
         # Write nojekyll file
-        with open(f'{site.output_dir}/{filename}', 'w+') as f:
-            f.write('')
+        outname = f'{site.output_dir}/{filename}'
+        log.debug(f'Writing to {outname}')
+        with open(outname, 'w+') as f: f.write('')
     return build_utility_file

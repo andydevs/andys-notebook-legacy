@@ -38,8 +38,12 @@ class Site:
 
         :see Site._defaults:
         """
+        log = logging.getLogger('site')
+        log.debug('Initialize site')
         for key, value in self._defaults.items():
+            log.debug(f"Setting key='{key}', value={repr(value)}")
             setattr(self, key, kwargs.get(key, value))
+            log.debug(f"site.{key} = {repr(getattr(self, key))}")
 
     @property
     def jinja_env(self):
@@ -58,6 +62,7 @@ class Site:
         log = logging.getLogger('site')
         log.info('Building site.')
         self._make_directory()
+        log.debug(f'Builders: {self.builders}')
         for run_builder in self.builders:
             log.info(f'Running {run_builder.__name__}')
             run_builder(self)
@@ -67,6 +72,7 @@ class Site:
         Ensure that output directory exists
         """
         log = logging.getLogger('site')
+        log.debug(f'Output Directory: {self.output_dir}')
         if os.path.exists(f'./{self.output_dir}'):
             log.info(f"'{self.output_dir}' directory exists!")
         else:
