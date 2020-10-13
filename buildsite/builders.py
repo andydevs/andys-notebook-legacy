@@ -29,23 +29,40 @@ def build_notebooks(site):
 
     # Loop through each file
     for filename in glob.glob(f'{site.notebook_dir}/*.ipynb'):
-        log.info(f"Building '{filename}'")
+        log.debug(f'Checking {filename}')
 
-        # Get output filename
-        name = os.path.basename(filename)
-        name = os.path.splitext(name)[0]
-        outn = f'{site.output_dir}/{name}.html'
-        log.debug(f"Root name '{name}'")
-        log.debug(f"Output file '{outn}'")
+        # Read notebook
+        log.debug('Reading notebook...')
+        with open(filename) as f:
+            notebook = nbformat.read(f, as_version=4)
+        
+        # Get relevant metadata
+        metadata = notebook.metadata.andysnb
+        log.debug(f'Title: {repr(notebook.metadata.title)}')
+        log.debug(f'Metadata: {repr(metadata)}')
 
-        # Read file and convert
-        body, _ = html.from_filename(filename)
-        log.debug(f'Body size: {len(body)} bytes')
+        # Conditionally only write files that are to be published
+        if metadata.get('publish', False):
+            log.debug('Notebook marked for publishing!')
+            log.info(f"Building '{filename}'")
 
-        # Write to file
-        log.debug(f'Writing to {outn}')
-        with open(outn, 'w+', encoding='utf-8') as out:
-            out.write(body)
+            # Get output filename
+            name = os.path.basename(filename)
+            name = os.path.splitext(name)[0]
+            outn = f'{site.output_dir}/{name}.html'
+            log.debug(f"Root name '{name}'")
+            log.debug(f"Output file '{outn}'")
+
+            # Convert file
+            body, _ = html.from_notebook_node(notebook)
+            log.debug(f'Body size: {len(body)} bytes')
+
+            # Write to file
+            log.debug(f'Writing to {outn}')
+            with open(outn, 'w+', encoding='utf-8') as out:
+                out.write(body)
+        else:
+            log.debug('Notebook not marked for publishing!')
 
 
 def build_index_page(site):
