@@ -6,6 +6,7 @@ Created: 10 - 12 - 2020
 """
 import os
 import glob
+import nbformat
 import nbconvert
 import codecs
 import logging
@@ -52,11 +53,21 @@ def build_index_page(site):
     # Get template
     template = site.jinja_env.get_template('index.html')
 
-    # Notebooks array
-    notebooks = glob.glob(f'{site.notebook_dir}/*.ipynb')
-    notebooks = [ os.path.basename(file) for file in notebooks ]
-    notebooks = [ os.path.splitext(name)[0] for name in notebooks ]
-    notebooks = [ (notebook, notebook) for notebook in notebooks ] 
+    # Get notebook
+    notebooks = []
+    for filename in glob.glob(f'{site.notebook_dir}/*.ipynb'):
+        # Read notebook
+        with open(filename, 'r') as file:
+            notebook = nbformat.read(file, as_version=4)
+
+        # Get root name and url
+        rootname = os.path.basename(filename)
+        rootname = os.path.splitext(rootname)[0]
+        indexurl = f'{site.base_url}/{rootname}.html'
+        
+        # Get title
+        title = notebook.metadata.title or rootname
+        notebooks.append((indexurl, title))
 
     # Read README markdown file
     with open('README.md', 'r') as f:

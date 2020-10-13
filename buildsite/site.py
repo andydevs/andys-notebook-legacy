@@ -20,6 +20,7 @@ class Site:
     """
     # Default configuration for site
     _defaults = {
+        'base_url': '/andys-notebook',
         'templates_dir': 'templates',
         'notebook_dir': 'notebook',
         'output_dir': 'docs',
