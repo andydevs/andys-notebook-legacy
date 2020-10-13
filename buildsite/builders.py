@@ -56,6 +56,7 @@ def build_index_page(site):
     notebooks = glob.glob(f'{site.notebook_dir}/*.ipynb')
     notebooks = [ os.path.basename(file) for file in notebooks ]
     notebooks = [ os.path.splitext(name)[0] for name in notebooks ]
+    notebooks = [ (notebook, notebook) for notebook in notebooks ] 
 
     # Read README markdown file
     with open('README.md', 'r') as f:
