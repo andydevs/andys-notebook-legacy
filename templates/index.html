@@ -6,7 +6,7 @@
     <title>Andy's Notebook</title>
     <style>
         body {
-            margin: 16pt;
+            margin: 0pt;
             font-family: -apple-system, 
                 BlinkMacSystemFont, 
                 'Segoe UI', Helvetica, 
@@ -14,6 +14,16 @@
                 'Apple Color Emoji', 
                 'Segoe UI Emoji', 
                 'Segoe UI Symbol';
+        }
+        a {
+            text-decoration: none;
+            color: #0077ff;
+        }
+        a:before {
+            content: '>';
+        }
+        .an-main {
+            padding: 16pt;
         }
         .an-notebook-index-title {
             margin: 8pt 0pt;
@@ -26,31 +36,53 @@
             list-style-type: none;
             margin: 4pt 0pt;
         }
-        .an-notebook-link a {
-            text-decoration: none;
-            color: #0077ff;
+        .an-nav {
+            margin: 0;
+            padding: 12pt;
+            display: flex; /* Stright flexin' on 'em' */
+            background-color: #0077ff;
+            color: white;
         }
-        .an-notebook-link a:before {
-            content: '>';
+        .an-nav-links {
+            margin: 0pt;
+            padding: 0pt;
+            display: block;
+        }
+        .an-nav-link {
+            margin: 10px;
+            display: inline-block;
+        }
+        .an-nav-link a {
+            color: inherit;
         }
     </style>
 </head>
 <body>
 
-<div class="an-readme">
-    {{ readme | safe }}
-</div>
-
-<div class="an-notebook-index">
-    <h2 class="an-notebook-index-title">Notebooks</h2>
-    <ul class='an-notebook-links'>
-    {% for link, name in notebooks %}
-        <li class="an-notebook-link">
-            <a href="{{ link }}">{{ name }}</a>
+<nav class="an-nav">
+    <ul class="an-nav-links">
+        <li class='an-nav-link'>
+            <a href="http://andydevs.github.io">Main Site</a>
         </li>
-    {% endfor %}
     </ul>
-</div>
+</nav>
+
+<main class="an-main">
+    <div class="an-readme">
+        {{ readme | safe }}
+    </div>
+
+    <div class="an-notebook-index">
+        <h2 class="an-notebook-index-title">Notebooks</h2>
+        <ul class='an-notebook-links'>
+        {% for link, name in notebooks %}
+            <li class="an-notebook-link">
+                <a href="{{ link }}">{{ name }}</a>
+            </li>
+        {% endfor %}
+        </ul>
+    </div>
+</main>
 
 </body>
 </html>
