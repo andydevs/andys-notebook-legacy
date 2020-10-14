@@ -8,8 +8,7 @@ import glob
 import nbconvert
 import logging
 import markdown
-import jinja2
-from .notebook import Notebook
+from . import notebook
 
 
 def build_notebooks(site):
@@ -25,10 +24,10 @@ def build_notebooks(site):
     log.debug(f'HTMLExporter: {repr(html)}')
 
     # Export notebooks
-    notebooks = Notebook.load_all(site)
-    for notebook in notebooks:
-        log.info(f"Building '{notebook.filename}'")
-        notebook.export(html, site)
+    notebooks = notebook.load_all(site)
+    for nb in notebooks:
+        log.info(f"Building '{nb.filename}'")
+        nb.export(html, site)
 
 
 def build_index_page(site):
@@ -42,7 +41,7 @@ def build_index_page(site):
     template = site.jinja_env.get_template('index.html')
 
     # Get notebook data
-    notebooks = Notebook.load_all(site)
+    notebooks = notebook.load_all(site)
     notebooks = [ notebook.get_notebook_data(site) for notebook in notebooks ]
     log.debug(f'Notebooks data: {notebooks}')
 
