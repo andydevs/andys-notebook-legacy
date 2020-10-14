@@ -20,21 +20,15 @@ def build_notebooks(site):
 
     # Create exporter
     html = nbconvert.HTMLExporter(
-        extra_loaders=[jinja2.FileSystemLoader(site.templates_dir)],
-        template_file='notebook.html'
-    )
+        extra_loaders=[site.jinja_loader],
+        template_file='notebook.html')
     log.debug(f'HTMLExporter: {repr(html)}')
 
-    # Conditionally build each file
-    for filename in glob.glob(f'{site.notebook_dir}/*.ipynb'):
-        log.debug(f'Checking {repr(filename)}')
-        notebook = Notebook.read(filename)
-        if notebook.publish:
-            log.debug('Notebook marked for publishing!')
-            log.info(f"Building '{filename}'")
-            notebook.export(html, site)
-        else:
-            log.debug('Notebook not marked for publishing!')
+    # Export notebooks
+    notebooks = Notebook.load_all(site)
+    for notebook in notebooks:
+        log.info(f"Building '{notebook.filename}'")
+        notebook.export(html, site)
 
 
 def build_index_page(site):
@@ -48,19 +42,12 @@ def build_index_page(site):
     template = site.jinja_env.get_template('index.html')
 
     # Get notebook data
-    notebooks = []
-    for filename in glob.glob(f'{site.notebook_dir}/*.ipynb'):
-        log.debug(f"Checking: '{filename}'")
-        notebook = Notebook.read(filename)
-        if notebook.publish:
-            log.debug('Notebook marked for publishing!')
-            notebook_data = notebook.get_notebook_data(site)
-            log.debug(f'Notebook data: {notebook_data}')
-            notebooks.append(notebook_data)
-        else:
-            log.debug('Notebook not marked for publishing!')
+    notebooks = Notebook.load_all(site)
+    notebooks = [ notebook.get_notebook_data(site) for notebook in notebooks ]
+    log.debug(f'Notebooks data: {notebooks}')
 
     # Read README markdown file
+    log.debug(f'Reading README.md')
     with open('README.md', 'r') as f:
         text = f.read()
     readme = markdown.markdown(text)

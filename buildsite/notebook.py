@@ -5,6 +5,7 @@ Author:  Anshul Kharbanda
 Created: 10 - 12 - 2020
 """
 import os
+import glob
 import nbformat
 import nbconvert
 import logging
@@ -12,6 +13,18 @@ import logging
 log = logging.getLogger('notebook')
 
 class Notebook:
+    ext = '.ipynb'
+
+    @staticmethod
+    def load_all(site, include_non_publish=False):
+        log.debug(f'include_non_publish: {include_non_publish}')
+        files = glob.glob(f'{site.notebook_dir}/*{Notebook.ext}')
+        notebooks = [Notebook.read(file) for file in files]
+        returning = [nb for nb in notebooks 
+            if nb.publish or include_non_publish]
+        log.debug(f'Returning: {returning}')
+        return returning
+
     @staticmethod
     def read(filename):
         log.debug(f"Reading '{filename}'")
@@ -26,6 +39,13 @@ class Notebook:
         log.debug(f"Rootname: '{self.rootname}'")
         log.debug(f"Title: '{self.title}'")
         log.debug(f'Metadata: {repr(self.metadata)}')
+
+    def __repr__(self):
+        return f'Notebook(filename="{self._filename}")'
+
+    @property
+    def filename(self):
+        return self._filename
 
     @property
     def rootname(self):
