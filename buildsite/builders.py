@@ -4,14 +4,12 @@ Hosting Jupyter Notebooks on GitHub Pages
 Author:  Anshul Kharbanda
 Created: 10 - 12 - 2020
 """
-import os
 import glob
-import nbformat
 import nbconvert
-import codecs
 import logging
 import markdown
 import jinja2
+from .notebook import Notebook
 
 
 def build_notebooks(site):
@@ -27,40 +25,14 @@ def build_notebooks(site):
     )
     log.debug(f'HTMLExporter: {repr(html)}')
 
-    # Loop through each file
+    # Conditionally build each file
     for filename in glob.glob(f'{site.notebook_dir}/*.ipynb'):
-        log.debug(f'Checking {filename}')
-
-        # Read notebook
-        log.debug('Reading notebook...')
-        with open(filename) as f:
-            notebook = nbformat.read(f, as_version=4)
-        
-        # Get relevant metadata
-        metadata = notebook.metadata.andysnb
-        log.debug(f'Title: {repr(notebook.metadata.title)}')
-        log.debug(f'Metadata: {repr(metadata)}')
-
-        # Conditionally only write files that are to be published
-        if metadata.get('publish', False):
+        log.debug(f'Checking {repr(filename)}')
+        notebook = Notebook.read(filename)
+        if notebook.publish:
             log.debug('Notebook marked for publishing!')
             log.info(f"Building '{filename}'")
-
-            # Get output filename
-            name = os.path.basename(filename)
-            name = os.path.splitext(name)[0]
-            outn = f'{site.output_dir}/{name}.html'
-            log.debug(f"Root name '{name}'")
-            log.debug(f"Output file '{outn}'")
-
-            # Convert file
-            body, _ = html.from_notebook_node(notebook)
-            log.debug(f'Body size: {len(body)} bytes')
-
-            # Write to file
-            log.debug(f'Writing to {outn}')
-            with open(outn, 'w+', encoding='utf-8') as out:
-                out.write(body)
+            notebook.export(html, site)
         else:
             log.debug('Notebook not marked for publishing!')
 
@@ -75,26 +47,18 @@ def build_index_page(site):
     # Get template
     template = site.jinja_env.get_template('index.html')
 
-    # Get notebook
+    # Get notebook data
     notebooks = []
     for filename in glob.glob(f'{site.notebook_dir}/*.ipynb'):
-        # Read notebook
-        log.debug(f"Filename: '{filename}'")
-        with open(filename, 'r') as file:
-            notebook = nbformat.read(file, as_version=4)
-
-        # Get root name and url
-        rootname = os.path.basename(filename)
-        rootname = os.path.splitext(rootname)[0]
-        indexurl = f'{site.base_url}/{rootname}.html'
-        
-        # Get title
-        title = notebook.metadata.title or rootname
-
-        # Append notebook data
-        notebook_data = (indexurl, title)
-        log.debug(f'Notebook data: {notebook_data}')
-        notebooks.append((indexurl, title))
+        log.debug(f"Checking: '{filename}'")
+        notebook = Notebook.read(filename)
+        if notebook.publish:
+            log.debug('Notebook marked for publishing!')
+            notebook_data = notebook.get_notebook_data(site)
+            log.debug(f'Notebook data: {notebook_data}')
+            notebooks.append(notebook_data)
+        else:
+            log.debug('Notebook not marked for publishing!')
 
     # Read README markdown file
     with open('README.md', 'r') as f:
