@@ -46,14 +46,20 @@ class Site:
             log.debug(f"site.{key} = {repr(getattr(self, key))}")
 
     @property
+    def jinja_loader(self):
+        """
+        Return jinja2 filesystem loader for this config
+        """
+        return jinja2.FileSystemLoader(self.templates_dir)
+
+    @property
     def jinja_env(self):
         """
         Return jinja2 environment for this config
         """
         return jinja2.Environment(
-            loader=jinja2.FileSystemLoader(self.templates_dir),
-            autoescape=jinja2.select_autoescape(['html'])
-        )
+            loader=self.jinja_loader,
+            autoescape=jinja2.select_autoescape(['html']))
 
     def build(self):
         """
