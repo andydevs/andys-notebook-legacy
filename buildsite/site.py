@@ -8,9 +8,9 @@ import os
 import jinja2
 import logging
 from .builders import (
-    build_notebooks,
-    build_index_page,
-    build_utility
+    NotebookBuilder,
+    IndexBuilder,
+    UtilityBuilder
 )
 
 
@@ -25,9 +25,9 @@ class Site:
         'notebook_dir': 'notebook',
         'output_dir': 'docs',
         'builders': [
-            build_notebooks,
-            build_index_page,
-            build_utility('.nojekyll')
+            NotebookBuilder(),
+            IndexBuilder(),
+            UtilityBuilder('.nojekyll')
         ]
     }
 
@@ -69,9 +69,9 @@ class Site:
         log.info('Building site.')
         self._make_directory()
         log.debug(f'Builders: {self.builders}')
-        for run_builder in self.builders:
-            log.info(f'Running {run_builder.__name__}')
-            run_builder(self)
+        for builder in self.builders:
+            log.info(f'Running {builder}')
+            builder.build(self)
 
     def _make_directory(self):
         """

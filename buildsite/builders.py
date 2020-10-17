@@ -11,65 +11,63 @@ import markdown
 from . import notebook
 
 
-def build_notebooks(site):
-    """
-    Build jupyter notebooks
-    """
-    log = logging.getLogger('build_notebooks')
+class NotebookBuilder:
+    def build(self, site):
+        log = logging.getLogger('build_notebooks')
 
-    # Create exporter
-    html = nbconvert.HTMLExporter(
-        extra_loaders=[site.jinja_loader],
-        template_file='notebook.html')
-    log.debug(f'HTMLExporter: {repr(html)}')
+        # Create exporter
+        html = nbconvert.HTMLExporter(
+            extra_loaders=[site.jinja_loader],
+            template_file='notebook.html')
+        log.debug(f'HTMLExporter: {repr(html)}')
 
-    # Export notebooks
-    notebooks = notebook.load_all(site)
-    for nb in notebooks:
-        log.info(f"Building '{nb.filename}'")
-        nb.export(html, site)
+        # Export notebooks
+        notebooks = notebook.load_all(site)
+        for nb in notebooks:
+            log.info(f"Building '{nb.filename}'")
+            nb.export(html, site)
 
 
-def build_index_page(site):
-    """
-    Build index page
-    """
-    log = logging.getLogger('build_index_page')
-    log.info("Building 'index.html'")
+class IndexBuilder:
+    output_name = 'index.html'
+    index_tamplate_name = 'index.html'
 
-    # Get template
-    template = site.jinja_env.get_template('index.html')
+    def build(self, site):
+        log = logging.getLogger('build_index_page')
+        log.info(f"Building '{self.output_name}'")
 
-    # Get notebook data
-    notebooks = notebook.load_all(site)
-    notebooks = [ notebook.get_notebook_data(site) for notebook in notebooks ]
-    log.debug(f'Notebooks data: {notebooks}')
+        # Get template
+        template = site.jinja_env.get_template(self.index_tamplate_name)
 
-    # Read README markdown file
-    log.debug(f'Reading README.md')
-    with open('README.md', 'r') as f:
-        text = f.read()
-    readme = markdown.markdown(text)
-    log.debug(f'Readme: \n' + readme)
+        # Get notebook data
+        notebooks = notebook.load_all(site)
+        notebooks = [ notebook.get_notebook_data(site) for notebook in notebooks ]
+        log.debug(f'Notebooks data: {notebooks}')
 
-    # Render and write to file
-    log.debug('Writing to output file')
-    output = template.render(readme=readme, notebooks=notebooks)
-    with open(f'{site.output_dir}/index.html', 'w+') as file:
-        file.write(output)
+        # Read README markdown file
+        log.debug(f'Reading README.md')
+        with open('README.md', 'r') as f:
+            text = f.read()
+        readme = markdown.markdown(text)
+        log.debug(f'Readme: \n' + readme)
+
+        # Render and write to file
+        log.debug('Writing to output file')
+        output = template.render(readme=readme, notebooks=notebooks)
+        with open(f'{site.output_dir}/{self.output_name}', 'w+') as file:
+            file.write(output)
 
 
-def build_utility(filename):
-    """
-    Return builder that just writes an empty file
-    with the given filename
-    """
-    def build_utility_file(site):
-        log = logging.getLogger(f"build_utility('{filename}')")
-        log.info(f"Building '{filename}'")
+class UtilityBuilder:
+    def __init__(self, filename):
+        self.filename = filename
+
+    def build(self, site):
+        log = logging.getLogger(f"build_utility('{self.filename}')")
+        log.info(f"Building '{self.filename}'")
 
         # Write nojekyll file
-        outname = f'{site.output_dir}/{filename}'
+        outname = f'{site.output_dir}/{self.filename}'
         log.debug(f'Writing to {outname}')
-        with open(outname, 'w+') as f: f.write('')
-    return build_utility_file
+        with open(outname, 'w+') as f:
+            f.write('')
