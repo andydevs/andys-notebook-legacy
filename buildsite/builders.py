@@ -13,12 +13,28 @@ from . import notebook
 
 
 class Builder(Configurable):
+    """
+    Base class for builders
+    """
     def build(self, site):
+        """
+        Build component of site
+
+        :param site: site instance
+        """
         raise NotImplementedError
 
 
 class NotebookBuilder(Builder):
+    """
+    Handles building jupyter notebooks
+    """
     def build(self, site):
+        """
+        Build component of site
+
+        :param site: site instance
+        """
         # Get logger
         log = logging.getLogger('notebook_builder')
 
@@ -36,12 +52,21 @@ class NotebookBuilder(Builder):
 
 
 class IndexBuilder(Builder):
+    """
+    Handles building the index page
+    """
+    # Component configuration
     _config = {
         'output_name': 'index.html',
         'index_template_name': 'index.html'
     }
 
     def build(self, site):
+        """
+        Build component of site
+
+        :param site: site instance
+        """
         # Get logger
         log = logging.getLogger('index_builder')
         log.info(f"Building '{self.output_name}'")
@@ -71,11 +96,21 @@ class IndexBuilder(Builder):
 
 
 class UtilityBuilder(Builder):
+    """
+    Builds an empty utility file of the given name,
+    passed in as "filename"
+    """
+    # Component configuration
     _config = {
         'filename': ''
     }
 
     def build(self, site):
+        """
+        Build component of site
+
+        :param site: site instance
+        """
         # Get logger
         log = logging.getLogger('utility_builder')
         log.info(f"Building '{self.filename}'")
