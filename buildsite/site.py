@@ -7,6 +7,7 @@ Created: 10 - 12 - 2020
 import os
 import jinja2
 import logging
+from .config import Configurable
 from .builders import (
     NotebookBuilder,
     IndexBuilder,
@@ -14,12 +15,12 @@ from .builders import (
 )
 
 
-class Site:
+class Site(Configurable):
     """
     Site object, handles all of the building
     """
     # Default configuration for site
-    _defaults = {
+    _config = {
         'base_url': '/andys-notebook',
         'templates_dir': 'templates',
         'notebook_dir': 'notebook',
@@ -27,23 +28,9 @@ class Site:
         'builders': [
             NotebookBuilder(),
             IndexBuilder(),
-            UtilityBuilder('.nojekyll')
+            UtilityBuilder(filename='.nojekyll')
         ]
     }
-
-    def __init__(self, **kwargs):
-        """
-        Initalize site object with given configuration,
-        passed through **kwargs
-
-        :see Site._defaults:
-        """
-        log = logging.getLogger('site')
-        log.debug('Initialize site')
-        for key, value in self._defaults.items():
-            log.debug(f"Setting key='{key}', value={repr(value)}")
-            setattr(self, key, kwargs.get(key, value))
-            log.debug(f"site.{key} = {repr(getattr(self, key))}")
 
     @property
     def jinja_loader(self):
