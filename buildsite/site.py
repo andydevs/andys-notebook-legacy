@@ -8,11 +8,7 @@ import os
 import jinja2
 import logging
 from .config import Configurable
-from .builders import (
-    NotebookBuilder,
-    IndexBuilder,
-    UtilityBuilder
-)
+from . import builders
 
 
 class Site(Configurable):
@@ -26,9 +22,9 @@ class Site(Configurable):
         'notebook_dir': 'notebook',
         'output_dir': 'docs',
         'builders': [
-            NotebookBuilder(),
-            IndexBuilder(),
-            UtilityBuilder(filename='.nojekyll')
+            builders.NotebookBuilder(),
+            builders.IndexBuilder(),
+            builders.UtilityBuilder(filename='.nojekyll')
         ]
     }
 
