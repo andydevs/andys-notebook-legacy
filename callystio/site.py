@@ -20,6 +20,7 @@ class Site(Configurable):
     _config = {
         'base_url': '',
         'templates_dir': 'templates',
+        'static_dir': 'static',
         'notebook_dir': 'notebook',
         'output_dir': 'docs'
     }
@@ -28,6 +29,7 @@ class Site(Configurable):
     _builders = [
         builders.NotebookBuilder(),
         builders.IndexBuilder(),
+        builders.StaticBuilder(),
         builders.UtilityBuilder(filename='.nojekyll')
     ]
 

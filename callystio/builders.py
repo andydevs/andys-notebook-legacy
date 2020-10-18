@@ -8,6 +8,7 @@ import glob
 import nbconvert
 import logging
 import markdown
+import os
 from .config import Configurable
 from . import notebook
 
@@ -49,6 +50,29 @@ class NotebookBuilder(Builder):
         for nb in notebooks:
             log.info(f"Building '{nb.filename}'")
             nb.export(html, site)
+
+
+class StaticBuilder(Builder):
+    """
+    Copies static files over to the index page
+    """
+    def build(self, site):
+        """
+        Build component of site
+
+        :param site: site instance
+        """
+        log = logging.getLogger('static_builder')
+        log.info('Copying static files')
+
+        # Loop through static file in the root
+        for inname in glob.glob(f'{site.static_dir}/*'):
+            log.debug(f'Copying {inname}')
+            basename = os.path.basename(inname)
+            outname = f'{site.output_dir}/{basename}'
+            with open(inname, 'r') as fin, open(outname, 'w+') as fout:
+                fout.write(fin.read())
+
 
 
 class IndexBuilder(Builder):
