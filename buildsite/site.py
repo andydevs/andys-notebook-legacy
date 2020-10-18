@@ -5,6 +5,7 @@ Author:  Anshul Kharbanda
 Created: 10 - 12 - 2020
 """
 import os
+import yaml
 import jinja2
 import logging
 from .config import Configurable
@@ -69,3 +70,24 @@ class Site(Configurable):
         else:
             log.info(f"Creating '{self.output_dir}' directory")
             os.mkdir(f"{self.output_dir}")
+
+
+def load_site():
+    """
+    Load site from config file
+    """
+    # Get logger
+    log = logging.getLogger('load_site')
+
+    # Read config python file
+    config_file = './config.yaml'
+    log.debug(f'Config file: {config_file}')
+    if os.path.exists(config_file):
+        log.debug('Config file found!')
+        with open(config_file) as f:
+            config = yaml.full_load(f)
+        return Site(**config)
+    else:
+        log.debug('No config file found')
+        log.debug('Default config')
+        return Site()
