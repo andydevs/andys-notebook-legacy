@@ -17,7 +17,7 @@ class Site(Configurable):
     """
     # Default configuration for site
     _config = {
-        'base_url': '/andys-notebook',
+        'base_url': '',
         'templates_dir': 'templates',
         'notebook_dir': 'notebook',
         'output_dir': 'docs'
