@@ -16,11 +16,17 @@ class Configurable:
     _config = {}
 
     def __init__(self, **kwargs):
+        """
+        Initialize configurable with keyword args
+        """
         for key, value in self._config.items():
             setattr(self, key, kwargs.get(key, value))
         log.debug(self)
         
     def __repr__(self):
+        """
+        String representation
+        """
         cfgstr = ', '.join(
             f'{k}={repr(getattr(self,k))}' 
             for k in self._config.keys())

@@ -20,13 +20,15 @@ class Site(Configurable):
         'base_url': '/andys-notebook',
         'templates_dir': 'templates',
         'notebook_dir': 'notebook',
-        'output_dir': 'docs',
-        'builders': [
-            builders.NotebookBuilder(),
-            builders.IndexBuilder(),
-            builders.UtilityBuilder(filename='.nojekyll')
-        ]
+        'output_dir': 'docs'
     }
+
+    # Internal builders array
+    _builders = [
+        builders.NotebookBuilder(),
+        builders.IndexBuilder(),
+        builders.UtilityBuilder(filename='.nojekyll')
+    ]
 
     @property
     def jinja_loader(self):
@@ -51,8 +53,8 @@ class Site(Configurable):
         log = logging.getLogger('site')
         log.info('Building site.')
         self._make_directory()
-        log.debug(f'Builders: {self.builders}')
-        for builder in self.builders:
+        log.debug(f'Builders: {self._builders}')
+        for builder in self._builders:
             log.info(f'Running {builder}')
             builder.build(self)
 
