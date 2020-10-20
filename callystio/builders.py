@@ -54,7 +54,7 @@ class NotebookBuilder(Builder):
 
 class StaticBuilder(Builder):
     """
-    Copies static files over to the index page
+    Copies static files into the site build
     """
     def build(self, site):
         """
