@@ -22,7 +22,7 @@ class Site(Configurable):
         'templates_dir': 'templates',
         'static_dir': 'static',
         'notebook_dir': 'notebook',
-        'output_dir': 'docs'
+        'output_dir': 'dist'
     }
 
     # Internal builders array

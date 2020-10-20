@@ -1,34 +1,24 @@
-# This is a basic workflow to help you get started with Actions
-
 name: Build Site
-
-# Controls when the action will run. Triggers the workflow on push or pull request
-# events but only for the master branch
 on:
   push:
     branches: [ master ]
-
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repo
-        uses: actions/checkout@v2
-      
+        uses: actions/checkout@v2      
       - name: Setup Python
         uses: actions/setup-python@v2.1.4
         with:
           python-version: 3.8
           architecture: x64
-      
       - name: Build Site
         run: |
           pip install -r requirements.txt
           python -m callystio build
-          
       - name: Simple GitHub Pages Deploy Action
         uses: rdarida/simple-github-pages-deploy-action@v1
         with:
-          git-base-folder: docs
+          git-base-folder: dist
           commit-message: Auto build static site
