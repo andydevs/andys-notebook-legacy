@@ -66,4 +66,7 @@ a:before {
     .jp-OutputPrompt {
         text-align: left;
     }
+    .jp-RenderedHTMLCommon {
+        padding: 0 var(--jp-code-padding);
+    }
 }
