@@ -82,7 +82,7 @@ class IndexBuilder(Builder):
     # Component configuration
     _config = {
         'output_name': 'index.html',
-        'index_template_name': 'index.html'
+        'template_name': 'index.html'
     }
 
     def build(self, site):
@@ -96,7 +96,7 @@ class IndexBuilder(Builder):
         log.info(f"Building '{self.output_name}'")
 
         # Get template
-        template = site.jinja_env.get_template(self.index_template_name)
+        template = site.jinja_env.get_template(self.template_name)
 
         # Get notebook data
         notebooks = notebook.load_all(site)
