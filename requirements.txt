@@ -5,6 +5,7 @@
 
 # Jupyter notebook environment
 notebook ~= 6.1
+ipywidgets ~= 7.5
 numpy ~= 1.19
 matplotlib ~= 3.3
 scipy ~= 1.5
