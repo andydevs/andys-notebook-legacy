@@ -102,7 +102,10 @@ class Notebook:
         log = logging.getLogger('notebook:Notebook#export')
         outn = self.get_output_filename(site)
         log.debug(f"Output filename: '{outn}'")
-        body, _ = exporter.from_notebook_node(self._nb)
+        body, _ = exporter.from_notebook_node(self._nb, {
+            'jupyter_widgets_base_url': 'https://cdn.jsdelivr.net/npm/',
+            'html_manager_semver_range': '*'
+        })
         log.debug(f'Body size: {len(body)} bytes')
         log.debug(f'Writing to {repr(outn)}')
         with open(outn, 'w+', encoding='utf-8') as out:

@@ -11,21 +11,22 @@ from .site import load_site
 
 
 @click.group()
-@click.option('--debug/--no-debug', default=False, help='Toggle debug logs')
-def cli(debug):
+def cli():
     """
     Command line interface
+    """
+    pass
+
+@cli.command()
+@click.option('--debug/--no-debug', default=False, help='Toggle debug logs')
+def build(debug):
+    """
+    Build the site
     """
     # Configure logging
     level = logging.DEBUG if debug else logging.INFO
     logging.basicConfig(stream=sys.stdout, level=level)
 
-
-@cli.command()
-def build():
-    """
-    Build the site
-    """
     # Get logger
     log = logging.getLogger('build')
 
