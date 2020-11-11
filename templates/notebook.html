@@ -6,20 +6,16 @@
 
 {% block body_header %}
 <body>
-<nav class="an-nav">
-    <ul class="an-nav-links">
-        <li class='an-nav-link'>
-            <a href="http://andydevs.github.io/andys-notebook/">Andy's Notebook</a>
-        </li>
-        <li class='an-nav-link'>
-            <a href="http://andydevs.github.io">Main Site</a>
-        </li>
-    </ul>
-</nav>
-<div class="jp-Notebook">
+
+{% include "navbar.html" %}
+
+<main class="jp-Notebook">
 {% endblock body_header %}
 
 {% block body_footer %}
-</div>
+</main>
+
+{% include "footer.html" %}
+
 {{ super() }}
 {% endblock body_footer %}
