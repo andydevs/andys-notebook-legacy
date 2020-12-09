@@ -65,6 +65,7 @@ a:before {
     flex: 1;
 }
 .an-footer {
+    margin-top: 16pt;
     padding: 16pt 15%;
     background-color: #eee;
     text-align: center;
