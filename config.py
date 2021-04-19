@@ -2,4 +2,4 @@
 # 
 # Author:  Anshul Kharbanda
 # Created: 10 - 12 - 2020
-base_url: /andys-notebook
+base_url = '/andys-notebook'

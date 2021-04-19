@@ -8,7 +8,8 @@ import os
 import yaml
 import jinja2
 import logging
-from .config import Configurable
+from importlib import import_module
+from .config import Configurable, load_config_file
 from . import builders
 
 
@@ -82,12 +83,12 @@ def load_site():
     log = logging.getLogger('load_site')
 
     # Read config python file
-    config_file = './config.yaml'
+    config_file = './config.py'
     log.debug(f'Config file: {config_file}')
     if os.path.exists(config_file):
         log.debug('Config file found!')
-        with open(config_file) as f:
-            config = yaml.full_load(f)
+        config = load_config_file(config_file)
+        log.debug(f'Config data: {config}')
         return Site(**config)
     else:
         log.debug('No config file found')

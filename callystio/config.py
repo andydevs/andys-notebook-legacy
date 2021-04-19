@@ -31,3 +31,15 @@ class Configurable:
             f'{k}={repr(getattr(self,k))}' 
             for k in self._config.keys())
         return f'{type(self).__name__}({cfgstr})'
+
+
+def load_config_file(path):
+    """
+    Load configuration file
+    """
+    config = {}
+    with open(path) as f:
+        data = f.read()
+        exec(data, config)
+        del config['__builtins__']
+    return config
