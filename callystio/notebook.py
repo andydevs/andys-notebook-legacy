@@ -65,7 +65,7 @@ class Notebook:
         """
         Relevant notebook metadata
         """
-        return self._nb.metadata.andysnb
+        return self._nb.metadata.callystio
 
     @property
     def publish(self):
