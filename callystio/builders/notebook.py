@@ -31,13 +31,9 @@ class NotebookBuilder(Builder):
 
         # Export notebooks
         for nb in site.notebooks.get_all():
-            filename = nb.metadata.callystio.filename
-            log.info(f"Building '{filename}'")
-
             # Get output filename
-            rootname = os.path.basename(filename)
-            rootname = os.path.splitext(rootname)[0]
-            output_filename = f'{site.output_dir}/{rootname}.html'
+            log.info(f"Building '{nb.metadata.callystio.filename}'")
+            output_filename = f'{site.output_dir}/{nb.metadata.callystio.rootname}.html'
             log.debug(f"Output filename: '{output_filename}'")
 
             # Export to html

@@ -18,9 +18,9 @@
     <div class="an-notebook-index">
         <h2 class="an-notebook-index-title">Notebooks</h2>
         <ul class='an-notebook-links'>
-        {% for link, name in notebooks %}
+        {% for notebook in notebooks %}
             <li class="an-notebook-link">
-                <a href="{{ link }}">{{ name }}</a>
+                <a href="{{ notebook.link }}">{{ notebook.title }}</a>
             </li>
         {% endfor %}
         </ul>

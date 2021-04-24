@@ -6,6 +6,7 @@ Created: 10 - 12 - 2020
 """
 from .builder import Builder
 from .. import notebook
+import os
 import logging
 import markdown
 
@@ -33,10 +34,9 @@ class IndexBuilder(Builder):
         template = site.jinja_env.get_template(self.template_name)
 
         # Get notebook data
-        notebooks = notebook.load_all(site)
-        notebooks = [ 
-            notebook.get_notebook_data(site) 
-            for notebook in notebooks ]
+        notebooks = site.notebooks.get_all_metadata()
+        for notebook in notebooks:
+            notebook.link = f'{site.base_url}/{notebook.rootname}.html'
         log.debug(f'Notebooks data: {notebooks}')
 
         # Read README markdown file

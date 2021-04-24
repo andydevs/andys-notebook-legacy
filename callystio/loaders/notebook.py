@@ -8,6 +8,7 @@ from ..config import Configurable
 import logging
 import nbformat
 from glob import glob
+import os
 
 
 class Notebooks:
@@ -40,10 +41,28 @@ class NotebookLoader(Configurable):
         log.info('Loading notebooks')
         nbs = []
         for filename in glob(f'{site.notebook_dir}/*{self.ext}'):
+            # Read notebook
             log.debug(f'Reading {filename}')
             with open(filename, 'r') as f:
                 nb = nbformat.read(f, as_version=4)
-                nb.metadata.callystio.filename = filename
-                nbs.append(nb)
+            
+            # Move filename and rootname
+            nb.metadata.callystio.filename = filename
+            rootname = os.path.basename(filename)
+            rootname = os.path.splitext(rootname)[0]
+            nb.metadata.callystio.rootname = rootname
+            log.debug(f'Rootname: {nb.metadata.callystio.rootname}')
+
+            # Move title
+            if 'title' in nb.metadata:
+                nb.metadata.callystio.title = nb.metadata.title
+            else:
+                nb.metadata.callystio.title = rootname
+            log.debug(f'Title: {nb.metadata.callystio.title}')
+
+            # Add to notebooks
+            nbs.append(nb)
+        
+        # Return notebooks
         log.info(f'Loaded {len(nbs)} notebooks')
         return Notebooks(nbs)
