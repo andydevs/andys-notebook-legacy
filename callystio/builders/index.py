@@ -5,7 +5,6 @@ Author:  Anshul Kharbanda
 Created: 10 - 12 - 2020
 """
 from .builder import Builder
-from .. import notebook
 import os
 import logging
 import markdown

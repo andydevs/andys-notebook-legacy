@@ -7,7 +7,6 @@ Created: 10 - 12 - 2020
 import os
 import logging
 from .builder import Builder
-from .. import notebook
 import nbconvert
 
 class NotebookBuilder(Builder):
