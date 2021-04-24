@@ -11,6 +11,7 @@ import logging
 from importlib import import_module
 from .config import Configurable, load_config_file
 from . import builders
+from . import loaders
 
 
 class Site(Configurable):
@@ -24,6 +25,11 @@ class Site(Configurable):
         'static_dir': 'static',
         'notebook_dir': 'notebook',
         'output_dir': 'dist'
+    }
+
+    # Internal loaders map
+    _loaders = {
+        'notebooks': loaders.NotebookLoader()
     }
 
     # Internal builders array
@@ -55,7 +61,18 @@ class Site(Configurable):
         """
         log = logging.getLogger('site')
         log.info('Building site.')
+
+        # Make directory if doesn't exist
         self._make_directory()
+
+        # Run loaders
+        log.debug(f'Loaders: {self._loaders}')
+        for name, loader in self._loaders.items():
+            log.info(f'Running {loader}')
+            result = loader.load(self)
+            setattr(self, name, result)
+
+        # Run builders
         log.debug(f'Builders: {self._builders}')
         for builder in self._builders:
             log.info(f'Running {builder}')
