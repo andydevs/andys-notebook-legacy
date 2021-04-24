@@ -13,6 +13,9 @@ from .config import Configurable, load_config_file
 from . import builders
 from . import loaders
 
+# Default config file name
+config_file = './config.py'
+
 
 class Site(Configurable):
     """
@@ -62,22 +65,9 @@ class Site(Configurable):
         """
         log = logging.getLogger('site')
         log.info('Building site.')
-
-        # Make directory if doesn't exist
         self._make_directory()
-
-        # Run loaders
-        log.debug(f'Loaders: {self._loaders}')
-        for name, loader in self._loaders.items():
-            log.info(f'Running {loader}')
-            result = loader.load(self)
-            setattr(self, name, result)
-
-        # Run builders
-        log.debug(f'Builders: {self._builders}')
-        for builder in self._builders:
-            log.info(f'Running {builder}')
-            builder.build(self)
+        self._run_loaders()
+        self._run_builders()
 
     def _make_directory(self):
         """
@@ -91,6 +81,28 @@ class Site(Configurable):
             log.info(f"Creating '{self.output_dir}' directory")
             os.mkdir(f"{self.output_dir}")
 
+    def _run_loaders(self):
+        """
+        Run loaders step
+        """
+        log = logging.getLogger('site')
+        log.debug(f'Loaders: {self._loaders}')
+        for name, loader in self._loaders.items():
+            log.info(f'Running {loader}')
+            result = loader.load(self)
+            setattr(self, name, result)
+
+    def _run_builders(self):
+        """
+        Run builders step
+        """
+        log = logging.getLogger('site')
+        log.debug(f'Builders: {self._builders}')
+        for builder in self._builders:
+            log.info(f'Running {builder}')
+            builder.build(self)
+
+
 
 def load_site():
     """
@@ -100,14 +112,15 @@ def load_site():
     log = logging.getLogger('load_site')
 
     # Read config python file
-    config_file = './config.py'
     log.debug(f'Config file: {config_file}')
     if os.path.exists(config_file):
+        # Read config file
         log.debug('Config file found!')
         config = load_config_file(config_file)
         log.debug(f'Config data: {config}')
         return Site(**config)
     else:
+        # Default config file
         log.debug('No config file found')
         log.debug('Default config')
         return Site()
