@@ -30,8 +30,7 @@ class Site(Configurable):
     _builders = [
         builders.NotebookBuilder(),
         builders.IndexBuilder(),
-        builders.StaticBuilder(),
-        builders.UtilityBuilder(filename='.nojekyll')
+        builders.StaticBuilder()
     ]
 
     @property
