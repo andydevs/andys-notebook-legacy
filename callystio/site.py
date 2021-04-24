@@ -29,7 +29,8 @@ class Site(Configurable):
 
     # Internal loaders map
     _loaders = {
-        'notebooks': loaders.NotebookLoader()
+        'notebooks': loaders.NotebookLoader(),
+        'statics': loaders.StaticLoader()
     }
 
     # Internal builders array

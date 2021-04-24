@@ -20,12 +20,12 @@ class StaticBuilder(Builder):
         :param site: site instance
         """
         log = logging.getLogger('static_builder')
-        log.info('Copying static files')
 
-        # Loop through static file in the root
-        for inname in glob.glob(f'{site.static_dir}/*'):
-            log.debug(f'Copying {inname}')
-            basename = os.path.basename(inname)
+        # Write static files
+        for filename, data in site.statics:
+            log.info(f'Building {filename}')
+            basename = os.path.basename(filename)
             outname = f'{site.output_dir}/{basename}'
-            with open(inname, 'r') as fin, open(outname, 'w+') as fout:
-                fout.write(fin.read())
+            log.debug(f'Writing to f{outname}')
+            with open(outname, 'w+') as fout:
+                fout.write(data)

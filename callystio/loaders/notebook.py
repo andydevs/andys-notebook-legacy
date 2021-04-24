@@ -4,7 +4,7 @@ Hosting Jupyter Notebooks on GitHub Pages
 Author:  Anshul Kharbanda
 Created: 10 - 12 - 2020
 """
-from ..config import Configurable
+from .loader import Loader
 import logging
 import nbformat
 from glob import glob
@@ -30,7 +30,7 @@ class Notebooks:
             if nb.metadata.callystio.publish or include_non_publish ]
 
 
-class NotebookLoader(Configurable):
+class NotebookLoader(Loader):
     ext = '.ipynb'
 
     def load(self, site):
@@ -38,7 +38,6 @@ class NotebookLoader(Configurable):
         Load all notebooks
         """
         log = logging.getLogger('NotebookLoader:load')
-        log.info('Loading notebooks')
         nbs = []
         for filename in glob(f'{site.notebook_dir}/*{self.ext}'):
             # Read notebook

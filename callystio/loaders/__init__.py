@@ -5,3 +5,4 @@ Author:  Anshul Kharbanda
 Created: 10 - 12 - 2020
 """
 from .notebook import NotebookLoader
+from .static import StaticLoader
