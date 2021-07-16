@@ -20,6 +20,7 @@ jinja2 ~= 2.11
 markdown ~= 3.3
 pyyaml ~= 5.3
 click ~= 7.1
+coloredlogs ~= 15.0
 
 # Other stuff
 tones ~= 1.2
