@@ -1,3 +1,6 @@
+:root {
+    --theme-color: #0077ff;
+}
 body {
     min-height: 100vh;
     margin: 0pt;
@@ -13,7 +16,7 @@ body {
 }
 a {
     text-decoration: none;
-    color: #0077ff;
+    color: var(--theme-color);
 }
 a:before {
     content: '>';
@@ -36,7 +39,7 @@ a:before {
     margin: 0;
     padding: 12pt;
     display: flex; /* Stright flexin' on 'em' */
-    background-color: #0077ff;
+    background-color: var(--theme-color);
     color: white;
 }
 .an-nav-links {
