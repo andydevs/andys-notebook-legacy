@@ -13,6 +13,15 @@ class NotebookBuilder(Builder):
     """
     Handles building jupyter notebooks
     """
+
+    def get_all(self, site, include_non_publish=False):
+        """
+        Get all notebooks
+        """
+        return [ 
+            nb for nb in site.notebooks 
+            if nb.metadata.callystio.publish or include_non_publish ]
+
     def build(self, site):
         """
         Build component of site
@@ -29,7 +38,7 @@ class NotebookBuilder(Builder):
         log.debug(f'HTMLExporter: {repr(html)}')
 
         # Export notebooks
-        for nb in site.notebooks.get_all():
+        for nb in self.get_all(site):
             # Get output filename
             log.info(f"Building '{nb.metadata.callystio.filename}'")
             output_filename = f'{site.output_dir}/{nb.metadata.callystio.rootname}.html'

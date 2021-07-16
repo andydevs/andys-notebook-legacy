@@ -11,25 +11,6 @@ from glob import glob
 import os
 
 
-class Notebooks:
-    def __init__(self, nbs=[]):
-        self.nbs = nbs
-
-    def get_all(self, include_non_publish=False):
-        """
-        Get all notebooks
-        """
-        return [ 
-            nb for nb in self.nbs 
-            if nb.metadata.callystio.publish or include_non_publish ]
-
-    def get_all_metadata(self, include_non_publish=False):
-        return [
-            nb.metadata.callystio
-            for nb in self.nbs 
-            if nb.metadata.callystio.publish or include_non_publish ]
-
-
 class NotebookLoader(Loader):
     ext = '.ipynb'
 
@@ -64,4 +45,4 @@ class NotebookLoader(Loader):
         
         # Return notebooks
         log.info(f'Loaded {len(nbs)} notebooks')
-        return Notebooks(nbs)
+        return nbs

@@ -127,4 +127,7 @@ dmypy.json
 # DS store thing
 .DS_Store
 */.DS_Store
-*/*/.DS_Store
+/**/*/.DS_Store
+notebook/.DS_Store
+notebook/data/.DS_Store
+.DS_Store

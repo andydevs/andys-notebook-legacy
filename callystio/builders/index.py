@@ -19,6 +19,14 @@ class IndexBuilder(Builder):
         'template_name': 'index.html'
     }
 
+    def get_all_metadata(self, site, include_non_publish=False):
+        """
+        Get all notebook metadata
+        """
+        return [
+            nb.metadata.callystio for nb in site.notebooks 
+            if nb.metadata.callystio.publish or include_non_publish ]
+
     def build(self, site):
         """
         Build component of site
@@ -33,7 +41,7 @@ class IndexBuilder(Builder):
         template = site.jinja_env.get_template(self.template_name)
 
         # Get notebook data
-        notebooks = site.notebooks.get_all_metadata()
+        notebooks = self.get_all_metadata(site)
         for notebook in notebooks:
             notebook.link = f'{site.base_url}/{notebook.rootname}.html'
         log.debug(f'Notebooks data: {notebooks}')
