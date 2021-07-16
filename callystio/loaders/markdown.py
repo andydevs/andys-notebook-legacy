@@ -6,7 +6,8 @@ Created: 10 - 12 - 2020
 """
 import logging
 from .loader import Loader
-import markdown
+from glob import glob
+from markdown import markdown
 
 class MarkdownFile:
     """
@@ -27,8 +28,16 @@ class MarkdownLoader(Loader):
 
     _config = {
         'directory': '',
-        'file': 'README.md'
+        'file': ''
     }
+
+    def _read_markdown_file(self, file):
+        log = logging.getLogger('MarkdownLoader:_read_markdown_file')
+        with open(file, 'r') as f:
+            md = f.read()
+        html = markdown(md)
+        log.debug(f'Markdown file {file} to html: {html}')
+        return MarkdownFile(self.file, html)
 
     def load(self, site):
         """
@@ -37,11 +46,12 @@ class MarkdownLoader(Loader):
         log = logging.getLogger('MarkdownLoader:load')
         if self.directory != '':
             log.info(f'Reading directory: {self.directory}')
-            return None
-        else:
+            return [
+                self._read_markdown_file(file)
+                for file in glob(f'{self.directory}/*{self.ext}')
+            ]
+        elif self.file != '':
             log.info(f'Reading file: {self.file}')
-            with open(self.file, 'r') as f:
-                md = f.read()
-            html = markdown.markdown(md)
-            log.debug(f'Markdown to html: {html}')
-            return MarkdownFile(self.file, html)
+            return self._read_markdown_file(self.file)
+        else:
+            log.error(f'No markdown file or directory specified!')
