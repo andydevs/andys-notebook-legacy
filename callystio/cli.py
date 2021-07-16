@@ -7,6 +7,7 @@ Created: 10 - 12 - 2020
 import click
 import sys
 import logging
+import coloredlogs
 from .site import load_site
 
 
@@ -26,9 +27,10 @@ def build(debug):
     # Configure logging
     level = logging.DEBUG if debug else logging.INFO
     logging.basicConfig(stream=sys.stdout, level=level)
+    coloredlogs.install(level=level)
 
     # Get logger
-    log = logging.getLogger('build')
+    log = logging.getLogger('cli:build')
 
     # Load and build site
     site = load_site()

@@ -32,7 +32,7 @@ class NotebookBuilder(Builder):
         :param site: site instance
         """
         # Get logger
-        log = logging.getLogger('notebook_builder')
+        log = logging.getLogger('NotebookBuilder:build')
 
         # Create exporter
         html = nbconvert.HTMLExporter(

@@ -19,7 +19,7 @@ class StaticBuilder(Builder):
 
         :param site: site instance
         """
-        log = logging.getLogger('static_builder')
+        log = logging.getLogger('StaticBuilder:build')
 
         # Write static files
         for filename, data in site.statics:
