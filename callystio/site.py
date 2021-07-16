@@ -42,7 +42,8 @@ class Site(Configurable):
     _builders = [
         builders.NotebookBuilder(),
         builders.IndexBuilder(),
-        builders.StaticBuilder()
+        builders.StaticBuilder(),
+        builders.PageBuilder()
     ]
 
     @property

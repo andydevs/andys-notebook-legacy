@@ -8,6 +8,7 @@ import logging
 from .loader import Loader
 from glob import glob
 from markdown import markdown
+import os
 
 class MarkdownFile:
     """
@@ -19,6 +20,18 @@ class MarkdownFile:
         """
         self.filename = filename
         self.html = html
+
+    @property
+    def rootname(self):
+        """
+        Get rootname of file
+        """
+        log = logging.getLogger('MarkdownFile:rootname')
+        log.debug(f'Filename: {self.filename}')
+        rootname = os.path.basename(self.filename)
+        rootname = os.path.splitext(rootname)[0]
+        log.debug(f'Rootname: {rootname}')
+        return rootname
 
 class MarkdownLoader(Loader):
     """
@@ -37,7 +50,7 @@ class MarkdownLoader(Loader):
             md = f.read()
         html = markdown(md)
         log.debug(f'Markdown file {file} to html: {html}')
-        return MarkdownFile(self.file, html)
+        return MarkdownFile(file, html)
 
     def load(self, site):
         """
@@ -46,10 +59,9 @@ class MarkdownLoader(Loader):
         log = logging.getLogger('MarkdownLoader:load')
         if self.directory != '':
             log.info(f'Reading directory: {self.directory}')
-            return [
-                self._read_markdown_file(file)
-                for file in glob(f'{self.directory}/*{self.ext}')
-            ]
+            files = glob(f'{self.directory}/*{self.ext}')
+            log.debug(f'Directory files: {files}')
+            return [self._read_markdown_file(file) for file in files]
         elif self.file != '':
             log.info(f'Reading file: {self.file}')
             return self._read_markdown_file(self.file)
