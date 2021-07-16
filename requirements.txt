@@ -2,6 +2,7 @@
 # 
 # Author:  Anshul Kharbanda
 # Created: 10 - 12 - 2020
+callystio ~= 1.0
 
 # Jupyter notebook environment
 notebook ~= 6.1
@@ -14,13 +15,6 @@ scikit-image ~= 0.18.1
 imagecodecs ~= 2021.1.28
 pandas ~= 1.1
 opencv-python ~= 4.5
-
-# Site building
-jinja2 ~= 2.11
-markdown ~= 3.3
-pyyaml ~= 5.3
-click ~= 7.1
-coloredlogs ~= 15.0
 
 # Other stuff
 tones ~= 1.2
