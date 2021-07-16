@@ -66,7 +66,7 @@ class Site(Configurable):
         """
         Build site
         """
-        log = logging.getLogger('site')
+        log = logging.getLogger('Site:build')
         log.info('Building site.')
         self._make_directory()
         self._run_loaders()
@@ -76,7 +76,7 @@ class Site(Configurable):
         """
         Ensure that output directory exists
         """
-        log = logging.getLogger('site')
+        log = logging.getLogger('Site:_make_directory')
         log.debug(f'Output Directory: {self.output_dir}')
         if os.path.exists(f'./{self.output_dir}'):
             log.info(f"'{self.output_dir}' directory exists!")
@@ -88,7 +88,7 @@ class Site(Configurable):
         """
         Run loaders step
         """
-        log = logging.getLogger('site')
+        log = logging.getLogger('Site:_run_loaders')
         log.debug(f'Loaders: {self._loaders}')
         for name, loader in self._loaders.items():
             log.info(f'Running {loader}')
@@ -99,7 +99,7 @@ class Site(Configurable):
         """
         Run builders step
         """
-        log = logging.getLogger('site')
+        log = logging.getLogger('Site:_run_builders')
         log.debug(f'Builders: {self._builders}')
         for builder in self._builders:
             log.info(f'Running {builder}')

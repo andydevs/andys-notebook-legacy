@@ -30,7 +30,7 @@ def build(debug):
     coloredlogs.install(level=level)
 
     # Get logger
-    log = logging.getLogger('build')
+    log = logging.getLogger('cli:build')
 
     # Load and build site
     site = load_site()
