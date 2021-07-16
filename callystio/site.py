@@ -34,7 +34,7 @@ class Site(Configurable):
     _loaders = {
         'notebooks': loaders.NotebookLoader(),
         'statics': loaders.StaticLoader(),
-        'index': loaders.MarkdownLoader(file='README.md'),
+        'readme': loaders.MarkdownLoader(file='README.md'),
         'pages': loaders.MarkdownLoader(directory='pages')
     }
 
