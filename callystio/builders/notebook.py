@@ -13,6 +13,9 @@ class NotebookBuilder(Builder):
     """
     Handles building jupyter notebooks
     """
+    _config = {
+        'template_name': 'notebook.html'
+    }
 
     def get_all(self, site, include_non_publish=False):
         """
@@ -34,7 +37,7 @@ class NotebookBuilder(Builder):
         # Create exporter
         html = nbconvert.HTMLExporter(
             extra_loaders=[site.jinja_loader],
-            template_file='notebook.html')
+            template_file=self.template_name)
         log.debug(f'HTMLExporter: {repr(html)}')
 
         # Export notebooks

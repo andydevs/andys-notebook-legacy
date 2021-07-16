@@ -33,14 +33,17 @@ class Site(Configurable):
     # Internal loaders map
     _loaders = {
         'notebooks': loaders.NotebookLoader(),
-        'statics': loaders.StaticLoader()
+        'statics': loaders.StaticLoader(),
+        'readme': loaders.MarkdownLoader(file='README.md'),
+        'pages': loaders.MarkdownLoader(directory='pages')
     }
 
     # Internal builders array
     _builders = [
         builders.NotebookBuilder(),
         builders.IndexBuilder(),
-        builders.StaticBuilder()
+        builders.StaticBuilder(),
+        builders.PageBuilder()
     ]
 
     @property

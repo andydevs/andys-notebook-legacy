@@ -26,6 +26,6 @@ class StaticBuilder(Builder):
             log.info(f'Building {filename}')
             basename = os.path.basename(filename)
             outname = f'{site.output_dir}/{basename}'
-            log.debug(f'Writing to f{outname}')
+            log.debug(f'Writing to {outname}')
             with open(outname, 'w+') as fout:
                 fout.write(data)

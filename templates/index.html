@@ -1,16 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Andy's Notebook</title>
-    <link rel="stylesheet" href="main.css">
-</head>
-<body>
+{% extends "layout.html" %}
 
-{% include "navbar.html" %}
-
-<main class="an-main">
+{% block content %}
     <div class="an-readme">
         {{ readme | safe }}
     </div>
@@ -25,9 +15,4 @@
         {% endfor %}
         </ul>
     </div>
-</main>
-
-{% include "footer.html" %}
-
-</body>
-</html>
+{% endblock %}
