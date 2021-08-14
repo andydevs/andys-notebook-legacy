@@ -16,6 +16,7 @@ entrypoints==0.3
 humanfriendly==9.2
 imagecodecs==2021.1.28
 imageio==2.9.0
+ipycanvas==0.9.0
 ipykernel==6.0.2
 ipython==7.25.0
 ipython-genutils==0.2.0
